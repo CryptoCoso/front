@@ -6,6 +6,7 @@ const Index: FC = () => {
   const [provider, setProvider] = useState<ethers.providers.Web3Provider>();
   const [account, setAccount] = useState<string>();
   const [tokenBalance, setTokenBalance] = useState<string>();
+  const [tokenAddress, setTokenAddress] = useState<string>();
 
   const connect = async () => {
     if (!window.ethereum?.request) {
@@ -24,14 +25,16 @@ const Index: FC = () => {
 
   const getTokenBalance = async () => {
     if (provider && account) {
-      const TOKEN_ADDR = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
-      const token = Erc20__factory.connect(TOKEN_ADDR, provider.getSigner());
+      // const TOKEN_ADDR = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
+      if (tokenAddress !== "") {
+        const token = Erc20__factory.connect(tokenAddress, provider.getSigner());
 
-      const rawBalance = await token.balanceOf(account);
-      const decimals = await token.decimals();
+        const rawBalance = await token.balanceOf(account);
+        const decimals = await token.decimals();
 
-      const balance = ethers.utils.formatUnits(rawBalance, decimals);
-      setTokenBalance(balance);
+        const balance = ethers.utils.formatUnits(rawBalance, decimals);
+        setTokenBalance(balance);
+      } else alert('Error: Token address is empty!');
     }
   };
 
@@ -41,6 +44,8 @@ const Index: FC = () => {
       <p>Account: {account}</p>
       <button onClick={getTokenBalance}>Get Token Balance</button>
       <p>Token Balance: {tokenBalance}</p>
+      <p>Token address:</p>
+      <input type="text" onChange={(e) => setTokenAddress(e.target.value)} />
     </>
   );
 };
