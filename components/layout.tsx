@@ -1,6 +1,6 @@
 import { Navbar } from "./navbar";
 
-export const Layout = ({ children }: React.HTMLAttributes<Element>) => {
+export const Layout: React.FC = ({ children }) => {
   return (
     <>
       <Navbar />

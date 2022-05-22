@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import React, { Props, ReactElement, ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 export function createCtx<A>(defaultValue: A) {
   type UpdateType = React.Dispatch<React.SetStateAction<typeof defaultValue>>;
@@ -8,10 +8,12 @@ export function createCtx<A>(defaultValue: A) {
     state: defaultValue,
     setState: defaultUpdate,
   });
-  function Provider(props: React.PropsWithChildren<ReactNode>) {
+  const Provider = (props: { children: ReactNode }) => {
     const [state, setState] = React.useState(defaultValue);
-    return <ctx.Provider value={{ state, setState }}>{props}</ctx.Provider>;
-  }
+    return (
+      <ctx.Provider value={{ state, setState }}>{props.children}</ctx.Provider>
+    );
+  };
   return [ctx, Provider] as const; // alternatively, [typeof ctx, typeof Provider]
 }
 
@@ -23,6 +25,6 @@ interface AppContextInterface {
 const [ctx, AppContextProvider] = createCtx<AppContextInterface>({});
 export const AppContext = ctx;
 
-export const AppWrapper = ({ children }: React.FC<Props>) => {
+export const AppWrapper: React.FC = ({ children }) => {
   return <AppContextProvider> {children} </AppContextProvider>;
 };
