@@ -78,7 +78,9 @@ export const Navbar = () => {
   };
 
   return (
-    <Box display="flex" flexGrow={1} justifyContent="space-between" width="100vw">
+    <Box display="flex" flexGrow={1}
+      justifyContent="space-between" width="100vw"
+      sx={{ backgroundColor: "#092A4E", color: "#fff", paddingY: '8px' }}>
 
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
         <Typography sx={{ minWidth: 100 }}>Contact</Typography>
