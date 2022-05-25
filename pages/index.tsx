@@ -1,39 +1,47 @@
-import { useContext, useState } from "react";
-import ipfs from 'ipfs'
+import { FC, useContext } from "react";
+import { AppContext } from "../context/state";
+import { CardComponent } from "../components/card";
+import { Button, Grid } from "@mui/material";
+import Link from "next/link";
+// import ipfs from "ipfs";
 
-const Index = () => {
+const Index: FC = () => {
   const { state: appState, setState: setAppState } = useContext(AppContext);
-
-  const [tokenBalance, setTokenBalance] = useState<string>();
-  const [contractAddress, setContractAddress] = useState<string>();
-  const { provider, account } = appState;
-  const [meta, setMeta] = useState<string>("No metadata yet");
-
-  const getMeta = async () => {
-    // const IPFS = ipfs.urlSource()
-    // const meta = ipfs.urlSource('QmcXuh9t39hQjvQeDM9zByUaRQRVEtUw47pLnt7NUjcRib');
-    // setMeta(JSON.stringify(meta));
-  };
-
   return (
-    <>
-      <p>Account: {account}</p>
-      {/* <button onClick={getTokenBalance}>Get Token Balance</button> */}
-      <p>Token Balance: {tokenBalance}</p>
-      <p>Token address:</p>
-      <input type="text" onChange={(e) => setContractAddress(e.target.value)} />
-      <button onClick={getMeta}>Get Metadata</button>
-      <code lang="json">{meta}</code>
-    </>
+    <Grid
+      p={"5%"}
+      spacing={{ xs: 2, md: 3 }}
+      columns={{ xs: 4, sm: 8, md: 12 }}
+      alignItems="center"
+      container
+    >
+      <Grid item>
+        <Link href={"/owner"}>
+          <Button style={{ textTransform: "none" }}>
+            <CardComponent
+              id={"placeholder"}
+              imageLocal={"../static/ownerImage.jpeg"}
+              title={"Owner"}
+              description={"I want to make money with my house"}
+            />
+          </Button>
+        </Link>
+      </Grid>
+
+      <Grid item>
+        <Link href={"/renter"}>
+          <Button style={{ textTransform: "none" }}>
+            <CardComponent
+              id={"placeholder"}
+              imageLocal={"../static/rentImage.jpeg"}
+              description={"I want to get a new place to live"}
+              title={"Renter"}
+            />
+          </Button>
+        </Link>
+      </Grid>
+    </Grid>
   );
 };
 
 export default Index;
-
-import { MetaMaskInpageProvider } from "@metamask/providers";
-import { AppContext } from "../context/state";
-declare global {
-  interface Window {
-    ethereum: MetaMaskInpageProvider;
-  }
-}

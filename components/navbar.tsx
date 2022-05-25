@@ -12,12 +12,12 @@ import {
 } from "@mui/material";
 import { ethers } from "ethers";
 import { Settings, Logout, PersonAdd } from "@mui/icons-material";
-import { useState, useContext } from "react";
+import { useState, useContext, FC } from "react";
 import { AppContext } from "../context/state";
 import { Maybe } from "@metamask/providers/dist/utils";
 import { Erc20__factory } from "../contracts/types";
 
-export const Navbar = () => {
+export const Navbar: FC = () => {
   const { state: appState, setState: setAppState } = useContext(AppContext);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -78,10 +78,13 @@ export const Navbar = () => {
   };
 
   return (
-    <Box display="flex" flexGrow={1}
-      justifyContent="space-between" width="100vw"
-      sx={{ backgroundColor: "#092A4E", color: "#fff", paddingY: '8px' }}>
-
+    <Box
+      display="flex"
+      flexGrow={1}
+      justifyContent="space-between"
+      width="100vw"
+      sx={{ backgroundColor: "#092A4E", color: "#fff", paddingY: "8px" }}
+    >
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
         <Typography sx={{ minWidth: 100 }}>Contact</Typography>
         <Typography sx={{ minWidth: 100 }}>Profile</Typography>
@@ -177,7 +180,6 @@ export const Navbar = () => {
           Logout
         </MenuItem>
       </Menu>
-
     </Box>
   );
 };
