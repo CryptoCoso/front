@@ -3,7 +3,6 @@ import { AppContext } from "../context/state";
 import { CardComponent } from "../components/card";
 import { Button, Grid } from "@mui/material";
 import Link from "next/link";
-// import ipfs from "ipfs";
 
 const Index: FC = () => {
   const { state: appState, setState: setAppState } = useContext(AppContext);

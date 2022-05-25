@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { ethers } from "ethers";
 import { Settings, Logout, PersonAdd } from "@mui/icons-material";
+<<<<<<< HEAD
 import { useState, useContext, FC } from "react";
 import { AppContext } from "../context/state";
 import { Maybe } from "@metamask/providers/dist/utils";
@@ -20,6 +21,16 @@ import { Erc20__factory } from "../contracts/types";
 export const Navbar: FC = () => {
   const { state: appState, setState: setAppState } = useContext(AppContext);
 
+=======
+import { useState, useContext } from "react";
+import { AppContext } from "../context/state";
+import { Maybe } from "@metamask/providers/dist/utils";
+import { Erc20__factory } from "../contracts/types";
+
+export const Navbar = () => {
+  const { state: appState, setState: setAppState } = useContext(AppContext);
+
+>>>>>>> 2b0d59f1c755e719559e30b7d98f306b1dad8e97
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -78,6 +89,7 @@ export const Navbar: FC = () => {
   };
 
   return (
+<<<<<<< HEAD
     <Box
       display="flex"
       flexGrow={1}
@@ -85,6 +97,12 @@ export const Navbar: FC = () => {
       width="100vw"
       sx={{ backgroundColor: "#092A4E", color: "#fff", paddingY: "8px" }}
     >
+=======
+    <Box display="flex" flexGrow={1}
+      justifyContent="space-between" width="100vw"
+      sx={{ backgroundColor: "#092A4E", color: "#fff", paddingY: '8px' }}>
+
+>>>>>>> 2b0d59f1c755e719559e30b7d98f306b1dad8e97
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
         <Typography sx={{ minWidth: 100 }}>Contact</Typography>
         <Typography sx={{ minWidth: 100 }}>Profile</Typography>
@@ -180,6 +198,10 @@ export const Navbar: FC = () => {
           Logout
         </MenuItem>
       </Menu>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2b0d59f1c755e719559e30b7d98f306b1dad8e97
     </Box>
   );
 };
