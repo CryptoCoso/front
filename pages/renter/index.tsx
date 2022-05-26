@@ -1,16 +1,14 @@
 import { Button, Grid, Link } from "@mui/material";
-import { FC, useContext, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { CardComponent } from "../../components/card";
-import { AppContext } from "../../context/state";
-import { propertiesPlaceholder, Metadata } from "../../models/property";
+import { propertiesPlaceholder, PropertyMetadata } from "../../models/property";
 
 const PropertiesList: FC = () => {
-  const { state: appState, setState: setAppState } = useContext(AppContext);
-  const [properties, setProperties] = useState(propertiesPlaceholder);
+  const [properties, setProperties] = useState<PropertyMetadata[]>([]);
 
   useEffect(() => {
-    // TODO: here we should fetch the properties from the blockchain
-  }, [appState]);
+    setProperties(propertiesPlaceholder);
+  }, []);
 
   return (
     <Grid
@@ -20,9 +18,9 @@ const PropertiesList: FC = () => {
       alignItems="center"
       container
     >
-      {properties.map((property: Metadata) => (
+      {properties.map((property: PropertyMetadata) => (
         <Grid item key={property.id}>
-          <Link href={`/property/${encodeURIComponent(property.id)}`}>
+          <Link href={`/renter/property/${encodeURIComponent(property.id)}`}>
             <Button style={{ textTransform: "none" }}>
               <CardComponent
                 id={property.id}

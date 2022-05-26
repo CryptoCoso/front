@@ -1,25 +1,17 @@
-import { FC, useContext } from "react";
-import { AppContext } from "../context/state";
+import { FC } from "react";
 import { CardComponent } from "../components/card";
 import { Button, Grid } from "@mui/material";
 import Link from "next/link";
 
 const Index: FC = () => {
-  const { state: appState, setState: setAppState } = useContext(AppContext);
   return (
-    <Grid
-      p={"5%"}
-      spacing={{ xs: 2, md: 3 }}
-      columns={{ xs: 4, sm: 8, md: 12 }}
-      alignItems="center"
-      container
-    >
+    <Grid p={"5%"} alignItems="center" container>
       <Grid item>
         <Link href={"/owner"}>
           <Button style={{ textTransform: "none" }}>
             <CardComponent
               id={"placeholder"}
-              imageLocal={"../static/ownerImage.jpeg"}
+              imageLocal={"/ownerImage.jpeg"}
               title={"Owner"}
               description={"I want to make money with my house"}
             />
@@ -32,7 +24,7 @@ const Index: FC = () => {
           <Button style={{ textTransform: "none" }}>
             <CardComponent
               id={"placeholder"}
-              imageLocal={"../static/rentImage.jpeg"}
+              imageLocal={"/rentImage.jpeg"}
               description={"I want to get a new place to live"}
               title={"Renter"}
             />

@@ -3,7 +3,6 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Paper } from "@mui/material";
 
 interface CardProps {
   id: string;
@@ -22,8 +21,17 @@ export const CardComponent: FC<CardProps> = ({
   price,
 }) => {
   return (
-    <Card sx={{ maxWidth: "600px" }}>
-      <CardMedia component="img" image={imageLocal ?? image} alt="card image" />
+    <Card
+      sx={{
+        maxWidth: "500px",
+      }}
+    >
+      <CardMedia
+        sx={{ height: "300px" }}
+        component="img"
+        image={imageLocal ?? image}
+        alt="card image"
+      />
       <CardContent>
         <Typography gutterBottom variant="h4">
           {title}
@@ -33,14 +41,8 @@ export const CardComponent: FC<CardProps> = ({
             {description}
           </Typography>
         )}
+        {price && <Typography variant="h5">{price + " ETH"}</Typography>}
       </CardContent>
-      {price && (
-        <Paper>
-          <Typography variant="h6" color="text.secondary">
-            {price + " ETH"}
-          </Typography>
-        </Paper>
-      )}
     </Card>
   );
 };

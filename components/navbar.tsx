@@ -1,185 +1,155 @@
 import {
   Avatar,
-  Box,
   Button,
-  Divider,
+  Grid,
   IconButton,
-  ListItemIcon,
   Menu,
   MenuItem,
+  Stack,
   Tooltip,
-  Typography,
 } from "@mui/material";
-import { ethers } from "ethers";
-import { Settings, Logout, PersonAdd } from "@mui/icons-material";
-import { useState, useContext, FC } from "react";
+import { House } from "@mui/icons-material";
+import { useState, useContext, FC, MouseEvent } from "react";
 import { AppContext } from "../context/state";
-import { Maybe } from "@metamask/providers/dist/utils";
-import { Erc20__factory } from "../contracts/types";
+import { connectToMetamask } from "../utils/metamask";
+import Link from "next/link";
 
 export const Navbar: FC = () => {
   const { state: appState, setState: setAppState } = useContext(AppContext);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  const [tokenBalance, setTokenBalance] = useState<string>();
-  const [tokenAddress, setTokenAddress] = useState<string>();
-  const { provider, account } = appState;
-
-  const connect = async () => {
-    if (!window.ethereum?.request) {
-      alert("MetaMask is not installed!");
-      return;
+  const handleMetamask = async () => {
+    try {
+      const connected = await connectToMetamask();
+      if (connected) {
+        setAppState(connected);
+      }
+    } catch (error) {
+      if (typeof error === "string") {
+        alert(error); // works, `e` narrowed to string
+      } else if (error instanceof Error) {
+        alert(error.message); // works, `e` narrowed to Error
+      }
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const provider = new ethers.providers.Web3Provider(window.ethereum as any);
-    const accounts: Maybe<string[]> = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
-
-    if (!accounts || !accounts[0]) {
-      alert("MetaMask is not installed!");
-      return;
-    }
-    console.log(accounts[0], provider);
-
-    setAppState({
-      account: accounts[0],
-      provider,
-    });
-    console.log("saved stuff", account, provider);
-  };
-
-  const getTokenBalance = async () => {
-    if (!provider || !account) {
-      alert("Error: Account not connected!");
-      return;
-    }
-    if (!tokenAddress) {
-      alert("Error: Token address is empty!");
-      return;
-    }
-
-    // This might not exist, so we need to use ´npm typechain´ to generate it
-    const token = Erc20__factory.connect(tokenAddress, provider.getSigner());
-
-    const rawBalance = await token.balanceOf(account);
-    const decimals = await token.decimals();
-
-    const balance = ethers.utils.formatUnits(rawBalance, decimals);
-    setTokenBalance(balance);
   };
 
   return (
-    <Box
-      display="flex"
-      flexGrow={1}
-      justifyContent="space-between"
-      width="100vw"
-      sx={{ backgroundColor: "#092A4E", color: "#fff", paddingY: "8px" }}
+    <Stack
+      direction="row"
+      spacing={2}
+      sx={{
+        position: "sticky",
+        paddingX: "2rem",
+        textAlign: "center",
+        backgroundColor: "#092A4E",
+        color: "#fff",
+      }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
-        <Typography sx={{ minWidth: 100 }}>Contact</Typography>
-        <Typography sx={{ minWidth: 100 }}>Profile</Typography>
-      </Box>
-
-      <Box>
-        {!account ? (
-          <Button
-            variant="outlined"
-            onClick={connect}
-            disabled={account ? true : false}
-          >
-            Connect
-          </Button>
-        ) : (
-          <Button variant="contained" onClick={getTokenBalance}>
-            Get Token Balance
-          </Button>
-        )}
-
-        <Tooltip title="Account settings">
-          <IconButton
-            onClick={handleClick}
-            size="small"
-            sx={{ ml: 2 }}
-            aria-controls={open ? "account-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-          >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
-          </IconButton>
-        </Tooltip>
-      </Box>
-
-      <Menu
-        anchorEl={anchorEl}
-        id="account-menu"
-        open={open}
-        onClose={handleClose}
-        onClick={handleClose}
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            overflow: "visible",
-            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-            mt: 1.5,
-            "& .MuiAvatar-root": {
-              width: 32,
-              height: 32,
-              ml: -0.5,
-              mr: 1,
-            },
-            "&:before": {
-              content: '""',
-              display: "block",
-              position: "absolute",
-              top: 0,
-              right: 14,
-              width: 10,
-              height: 10,
-              bgcolor: "background.paper",
-              transform: "translateY(-50%) rotate(45deg)",
-              zIndex: 0,
-            },
-          },
+      <Link href={"/"}>
+        <Button>
+          <img
+            src="/logo.png"
+            alt="logo"
+            height={"50px"}
+            style={{ borderRadius: "5%" }}
+          />
+        </Button>
+      </Link>
+      <Grid item xs={true} />
+      <Link href={"/about"}>
+        <Button
+          variant="outlined"
+          sx={{
+            alignSelf: "center",
+            height: "50px",
+          }}
+        >
+          About
+        </Button>
+      </Link>
+      <Button
+        variant="contained"
+        onClick={handleMetamask}
+        disabled={appState.account ? true : false}
+        sx={{
+          alignSelf: "center",
+          height: "50px",
         }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem>
-          <Avatar /> Profile
-        </MenuItem>
-        <MenuItem>
-          <Avatar /> My account
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add another account
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <Logout fontSize="small" />
-          </ListItemIcon>
-          Logout
-        </MenuItem>
-      </Menu>
-    </Box>
+        {appState.account ? "Connected" : "Connect Metamask"}
+      </Button>
+      {appState.account && (
+        <>
+          <Tooltip title="Account settings">
+            <IconButton
+              onClick={handleClick}
+              size="small"
+              sx={{ ml: 2 }}
+              aria-controls={open ? "account-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+            >
+              <Avatar sx={{ width: 36, height: 36 }}>
+                {appState.account?.slice(-3)}
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+          <Menu
+            anchorEl={anchorEl}
+            id="account-menu"
+            open={open}
+            onClose={handleClose}
+            onClick={handleClose}
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                overflow: "visible",
+                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                mt: 1.5,
+                "& .MuiAvatar-root": {
+                  width: 32,
+                  height: 32,
+                  ml: -0.5,
+                  mr: 1,
+                },
+                "&:before": {
+                  content: '""',
+                  display: "block",
+                  position: "absolute",
+                  top: 0,
+                  right: 14,
+                  width: 10,
+                  height: 10,
+                  bgcolor: "background.paper",
+                  transform: "translateY(-50%) rotate(45deg)",
+                  zIndex: 0,
+                },
+              },
+            }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <MenuItem>
+              <Link
+                href={`/renter/rented/${encodeURIComponent(appState.account)}`}
+              >
+                <Button>
+                  <House sx={{ padding: "0px 5px 0px 0px" }} />{" "}
+                  {"My Rented Properties"}
+                </Button>
+              </Link>
+            </MenuItem>
+          </Menu>
+        </>
+      )}
+    </Stack>
   );
 };

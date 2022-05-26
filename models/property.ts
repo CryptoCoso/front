@@ -1,4 +1,4 @@
-export interface Metadata {
+export interface PropertyMetadata {
   id: string;
   title: string;
   description?: string;
@@ -11,7 +11,7 @@ export interface MetadataProperties {
   value: string;
 }
 
-export const propertiesPlaceholder: Metadata[] = [
+export const propertiesPlaceholder: PropertyMetadata[] = [
   {
     id: "placeholder",
     image:

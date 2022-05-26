@@ -1,45 +1,55 @@
+import { Card, CardContent, Stack } from "@mui/material";
 import { FC, useEffect, useState } from "react";
-import { propertiesPlaceholder, Metadata } from "../models/property";
-import { Card, CardContent, CardMedia, Paper, Typography } from "@mui/material";
+import {
+  MetadataProperties,
+  propertiesPlaceholder,
+  PropertyMetadata,
+} from "../models/property";
+import { CardComponent } from "./card";
 
 interface PropertyDetailProps {
   propertyId: string;
 }
 
 export const PropertyDetail: FC<PropertyDetailProps> = ({ propertyId }) => {
-  const [property, setProperty] = useState<Metadata | undefined>();
+  const [property, setProperty] = useState<PropertyMetadata | undefined>();
   useEffect(() => {
     // TODO: here we should fetch the property from the blockchain
-    const property = propertiesPlaceholder.filter((property: Metadata) => {
-      return property.id == propertyId;
-    })[0];
-    console.log(propertyId);
-    console.log(property);
+    const property = propertiesPlaceholder.filter(
+      (property: PropertyMetadata) => {
+        return property.id == propertyId;
+      }
+    )[0];
     setProperty(property);
   }, [propertyId]);
+
   return (
     <>
       {property && (
-        <Card>
-          <CardMedia component="img" image={property.image} alt="card image" />
-          <CardContent>
-            <Typography gutterBottom variant="h4">
-              {property?.title}
-            </Typography>
-            {property?.description && (
-              <Typography variant="body2" color="text.secondary">
-                {property?.description}
-              </Typography>
-            )}
-          </CardContent>
-          {property?.value && (
-            <Paper>
-              <Typography variant="h6" color="text.secondary">
-                {property?.value + " ETH"}
-              </Typography>
-            </Paper>
-          )}
-        </Card>
+        <Stack sx={{ margin: "20px" }}>
+          <CardComponent
+            id={property.id}
+            description={property?.description ?? ""}
+            image={property?.image ?? ""}
+            title={property?.title ?? ""}
+            price={property?.value ?? 0}
+          />
+          <Card>
+            <CardContent>
+              <h4> Additional Information</h4>
+              <>
+                {property.properties.map(
+                  (propertyField: MetadataProperties) => (
+                    <>
+                      <h5>{propertyField.name}</h5>
+                      <body>{propertyField.value}</body>
+                    </>
+                  )
+                )}
+              </>
+            </CardContent>
+          </Card>
+        </Stack>
       )}
     </>
   );
