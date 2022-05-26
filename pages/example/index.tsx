@@ -1,4 +1,6 @@
-const Example = () => {
+import { FC } from "react";
+
+const Example: FC = () => {
   return (
     <div>
       <h1>Example</h1>
