@@ -39,7 +39,8 @@ const getMetadata = async (): Promise<unknown> => {
 
 const mintNft = async (formData: FormData): Promise<unknown> => {
   try {
-    const response = await fetch(`https://${baseUri}/mint-nft`, {
+    console.log({ formData, json: JSON.stringify(formData) })
+    const response = await fetch(`https://${baseUri}/create-nft`, {
       method: 'POST',
       body: formData,
     });

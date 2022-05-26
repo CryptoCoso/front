@@ -27,7 +27,7 @@ const CreateForm: FC = () => {
       title: formData.title as string,
       description: formData.description as string,
       value: (formData.price as unknown) as number,
-      properties: [
+      attributes: [
         {
           name: formData.key1 as string,
           value: formData.value1 as string
@@ -46,10 +46,10 @@ const CreateForm: FC = () => {
     formDataF.append('image', image)
     Pinata.mintNft(formDataF)
       .then(res => {
-        console.log(res)
+        console.log({ res })
       })
       .catch(err => {
-        console.log(err)
+        console.log({ err })
       })
     console.log(metadata)
     formElement.reset()
@@ -86,7 +86,9 @@ const CreateForm: FC = () => {
             ref={r => (ref = r)}
             onChange={e => {
               if (e && e.target && e.target.files) {
-                setFile(e.target.files[0])
+                const file = e.target.files[0]
+                console.log({ file })
+                setFile(file)
               }
             }}
           />
