@@ -58,6 +58,7 @@ const uploadNFTData = async (formData: FormData): Promise<NFTCreationResponse> =
     console.error(error);
     return {
       message: "Couldn't mint NFT",
+      code: 500,
     };
   }
 }
