@@ -4,10 +4,10 @@ export interface PropertyMetadata {
   description?: string;
   image: string;
   value: number;
-  properties: MetadataProperties[];
+  attributes: MetadataProperties[];
 }
 export interface MetadataProperties {
-  name: string;
+  trait_type: string;
   value: string;
 }
 
@@ -19,13 +19,13 @@ export const propertiesPlaceholder: PropertyMetadata[] = [
     title: "Casa de dos dormitorios en la rambla",
     description: "Amueblada, hermosa propiedad",
     value: 2000,
-    properties: [
+    attributes: [
       {
-        name: "numero de baños",
+        trait_type: "numero de baños",
         value: "2",
       },
       {
-        name: "acepta mascotas?",
+        trait_type: "acepta mascotas?",
         value: "no",
       },
     ],

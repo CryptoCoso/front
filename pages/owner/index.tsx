@@ -2,6 +2,7 @@ import { Box, Button, Stack, TextField } from "@mui/material";
 import { FC } from "react";
 import { Form, HandleForm } from "react-component-form";
 import { PropertyMetadata } from "../../models/property";
+import Pinata from '../../utils/pinata';
 
 interface PropertyMetadataWithFile
   extends Omit<PropertyMetadata, "image" | "id"> {
@@ -9,9 +10,8 @@ interface PropertyMetadataWithFile
 }
 
 const CreateForm: FC = () => {
+
   const handleSubmit: HandleForm = (formData, formElement) => {
-    // TODO: here we should create the property on the blockchain
-    // TODO: Check how to send the image
     if (!formData.image) {
       alert("Please select an image");
       return;
@@ -22,23 +22,37 @@ const CreateForm: FC = () => {
       description: formData.description as string,
       value: (formData.price as unknown) as number,
       image: formData.image as File,
-      properties: [
+      attributes: [
         {
-          name: formData.key1 as string,
+          trait_type: formData.key1 as string,
           value: formData.value1 as string,
         },
         {
-          name: formData.key2 as string,
+          trait_type: formData.key2 as string,
           value: formData.value2 as string,
         },
         {
-          name: formData.key3 as string,
+          trait_type: formData.key3 as string,
           value: formData.value3 as string,
         },
       ],
     };
-    console.log(metadata);
-    formElement.reset();
+    // * Create the FormData and populate it to send to the server
+    let formDataF = new FormData();
+    formDataF.append("image", formData.image);
+    formDataF.append("metadata", JSON.stringify(metadata));
+    // * Send the formData to the server
+    Pinata.uploadNFTData(formDataF).then((res) => {
+      if (res.code === 200) {
+        // TODO: Redirect to the new property or some other place (now it just pop ups an alert)
+        console.log(res);
+        alert(res.message);
+        formElement.reset();
+      } // TODO: Handle other code responses. Also from backend
+    }).catch((err) => {
+      console.log(err);
+      alert(err.message);
+    });
   };
 
   return (
@@ -63,16 +77,15 @@ const CreateForm: FC = () => {
               step: "0.0000001",
             }}
           />
-          <input
-            accept="image/*"
-            hidden={true}
-            id="raised-button-file"
-            multiple
-            type="file"
-          />
-          <label htmlFor="raised-button-file">
-            <Button variant="contained">Upload image</Button>
-          </label>
+          <Button variant="contained" component='label'>
+            <input
+              accept="image/*"
+              hidden
+              type="file"
+              name="image"
+            />
+            Upload image
+          </Button>
           <h4> Additional fields</h4>
           <Stack>
             <TextField label="Field" type="string" name="key1" />
