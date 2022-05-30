@@ -5,8 +5,8 @@ import { PropertyMetadata } from "../../models/property";
 import Pinata from '../../utils/pinata';
 
 interface PropertyMetadataWithFile
-  extends Omit<PropertyMetadata, "image" | "id"> {
-  image: File;
+  extends Omit<PropertyMetadata, 'image' | 'id'> {
+  image: File
 }
 
 const CreateForm: FC = () => {
@@ -17,7 +17,7 @@ const CreateForm: FC = () => {
       return;
     }
 
-    const metadata: PropertyMetadataWithFile = {
+    const metadata = {
       title: formData.title as string,
       description: formData.description as string,
       value: (formData.price as unknown) as number,
@@ -56,25 +56,25 @@ const CreateForm: FC = () => {
   };
 
   return (
-    <Box sx={{ margin: "25px" }}>
+    <Box sx={{ margin: '25px' }}>
       <h3> Register your House </h3>
       <Form onSubmit={handleSubmit}>
-        <Stack direction="column" spacing={2}>
-          <TextField label="Title" required type="text" name="title" />
+        <Stack direction='column' spacing={2}>
+          <TextField label='Title' required type='text' name='title' />
           <TextField
-            label="Description"
+            label='Description'
             required
-            type="text"
-            name="description"
+            type='text'
+            name='description'
           />
           <TextField
             required
-            label="Price"
-            type="number"
-            name="price"
+            label='Price'
+            type='number'
+            name='price'
             inputProps={{
               maxLength: 13,
-              step: "0.0000001",
+              step: '0.0000001'
             }}
           />
           <Button variant="contained" component='label'>
@@ -88,24 +88,24 @@ const CreateForm: FC = () => {
           </Button>
           <h4> Additional fields</h4>
           <Stack>
-            <TextField label="Field" type="string" name="key1" />
-            <TextField label="Value" type="string" name="value1" />
+            <TextField label='Field' type='string' name='key1' />
+            <TextField label='Value' type='string' name='value1' />
           </Stack>
           <Stack>
-            <TextField label="Field" type="string" name="key2" />
-            <TextField label="Value" type="string" name="value2" />
+            <TextField label='Field' type='string' name='key2' />
+            <TextField label='Value' type='string' name='value2' />
           </Stack>
           <Stack>
-            <TextField label="Field" type="string" name="key3" />
-            <TextField label="Value" type="string" name="value3" />
+            <TextField label='Field' type='string' name='key3' />
+            <TextField label='Value' type='string' name='value3' />
           </Stack>
-          <Button type="submit" variant="contained">
+          <Button type='submit' variant='contained'>
             Submit
           </Button>
         </Stack>
       </Form>
     </Box>
-  );
-};
+  )
+}
 
-export default CreateForm;
+export default CreateForm
