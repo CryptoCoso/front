@@ -1,8 +1,8 @@
-import { Box, Button, Stack, TextField } from '@mui/material'
-import { FC, useRef, useState } from 'react'
-import { Form, HandleForm } from 'react-component-form'
-import { PropertyMetadata } from '../../models/property'
-import { default as Pinata } from '../../utils/pinata'
+import { Box, Button, Stack, TextField } from "@mui/material";
+import { FC } from "react";
+import { Form, HandleForm } from "react-component-form";
+import { PropertyMetadata } from "../../models/property";
+import Pinata from '../../utils/pinata';
 
 interface PropertyMetadataWithFile
   extends Omit<PropertyMetadata, 'image' | 'id'> {
@@ -10,50 +10,50 @@ interface PropertyMetadataWithFile
 }
 
 const CreateForm: FC = () => {
-  let ref: HTMLInputElement | null = null
-  const [file, setFile] = useState<File>()
+
   const handleSubmit: HandleForm = (formData, formElement) => {
-    console.log(formData, formElement)
-    // TODO: here we should create the property on the blockchain
-    // TODO: Check how to send the image
-    const formDataF = new FormData()
-    const image = formData.image as File
-    // if (!formDataF.image) {
-    //   alert('Please select an image')
-    //   return
-    // }
+    if (!formData.image) {
+      alert("Please select an image");
+      return;
+    }
 
     const metadata = {
       title: formData.title as string,
       description: formData.description as string,
       value: (formData.price as unknown) as number,
+      image: formData.image as File,
       attributes: [
         {
-          name: formData.key1 as string,
-          value: formData.value1 as string
+          trait_type: formData.key1 as string,
+          value: formData.value1 as string,
         },
         {
-          name: formData.key2 as string,
-          value: formData.value2 as string
+          trait_type: formData.key2 as string,
+          value: formData.value2 as string,
         },
         {
-          name: formData.key3 as string,
-          value: formData.value3 as string
-        }
-      ]
-    }
-    formDataF.append('metadata', JSON.stringify(metadata))
-    formDataF.append('image', image)
-    Pinata.mintNft(formDataF)
-      .then(res => {
-        console.log({ res })
-      })
-      .catch(err => {
-        console.log({ err })
-      })
-    console.log(metadata)
-    formElement.reset()
-  }
+          trait_type: formData.key3 as string,
+          value: formData.value3 as string,
+        },
+      ],
+    };
+    // * Create the FormData and populate it to send to the server
+    let formDataF = new FormData();
+    formDataF.append("image", formData.image);
+    formDataF.append("metadata", JSON.stringify(metadata));
+    // * Send the formData to the server
+    Pinata.uploadNFTData(formDataF).then((res) => {
+      if (res.code === 200) {
+        // TODO: Redirect to the new property or some other place (now it just pop ups an alert)
+        console.log(res);
+        alert(res.message);
+        formElement.reset();
+      } // TODO: Handle other code responses. Also from backend
+    }).catch((err) => {
+      console.log(err);
+      alert(err.message);
+    });
+  };
 
   return (
     <Box sx={{ margin: '25px' }}>
@@ -77,26 +77,15 @@ const CreateForm: FC = () => {
               step: '0.0000001'
             }}
           />
-          <input
-            accept='image/*'
-            hidden={true}
-            id='raised-button-file'
-            multiple
-            type='file'
-            ref={r => (ref = r)}
-            onChange={e => {
-              if (e && e.target && e.target.files) {
-                const file = e.target.files[0]
-                console.log({ file })
-                setFile(file)
-              }
-            }}
-          />
-          <label htmlFor='raised-button-file'>
-            <Button variant='contained' onClick={() => ref?.click()}>
-              Upload image
-            </Button>
-          </label>
+          <Button variant="contained" component='label'>
+            <input
+              accept="image/*"
+              hidden
+              type="file"
+              name="image"
+            />
+            Upload image
+          </Button>
           <h4> Additional fields</h4>
           <Stack>
             <TextField label='Field' type='string' name='key1' />
